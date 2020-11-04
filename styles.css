@@ -1,0 +1,37 @@
+#result
+{
+    border:1px solid black;
+    width: 80vw;
+    margin-top: 20px;
+}
+
+.resultData
+{
+    border:0.5px solid black;
+    text-align: center;
+
+}
+
+.resultRow
+{
+    border:2px solid black;
+
+}
+
+#numberOfFrames
+{
+    max-width: 30px;
+}
+
+#inputString
+{
+    width: 300px;
+    margin: 5px;
+}
+
+td{
+    text-align: center;
+}
+body{
+    margin: 10px;
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <script src="calculate.js"> </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+
+
+  </head>
+  <body>
+    <form>
+     
+         Number of frames:      <input id = 'numberOfFrames' type = 'number'/>
+<br/>
+            Input String:
+         <input id = 'inputString'/>
+   
+<br/>
+      <label>Type:</label>
+
+      <select id="type">
+        <option value="firstInFirstOut">First In First Out</option>
+        <option value="leastRecentlyUsed">Least Recently Used</option>
+        <option value="mostRecentlyUsed">Most Recently Used</option>
+        <option value="secondChance">Second Chance</option>
+        <option value="leastFrequentlyUsed">Least Frequently Used</option>
+        <option value="mostFrequentlyUsed">Most Frequently Used</option>
+      </select>
+
+      <button name="data" type="button" onclick="show()">Calculate</button>
+    </form>
+
+    <table id = 'result'>
+
+    </table>
+    <div id = 'calculations'>
+
+    </div>
+  </body>
+
+</html>

@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-      <script src="calculate.js"> </script>
+    <script src="calculate.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
-
-
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <form>
-     
-         Number of frames:      <input id = 'numberOfFrames' type = 'number'/>
-<br/>
-            Input String:
-         <input id = 'inputString'/>
-   
-<br/>
+      Number of frames: <input id="numberOfFrames" type="number" min:1 />
+      <br />
+      Input String:
+      <input id="inputString" placeholder="pages separated by commas"/>
+
+      <br />
       <label>Type:</label>
 
       <select id="type">
@@ -32,12 +29,7 @@
       <button name="data" type="button" onclick="show()">Calculate</button>
     </form>
 
-    <table id = 'result'>
-
-    </table>
-    <div id = 'calculations'>
-
-    </div>
+    <table id="result"></table>
+    <div id="calculations"></div>
   </body>
-
 </html>

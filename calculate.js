@@ -193,7 +193,11 @@ function showResults() {
         {
           toEnter = `<span> ${toEnter.name} <sub> ${toEnter.count}</sub></span>`;
         }
-        toEnter.touched&& (td.style.color = 'red')
+        else{
+          toEnter.touched&& (td.style.color = 'red')
+          toEnter = toEnter.name
+
+        }
       }
       td.innerHTML = toEnter === undefined ? "X" : toEnter;
       td.setAttribute("class", "resultData");

@@ -17,7 +17,6 @@ function show() {
   while (string.includes(' ')) {
     string = string.replace(" ", ",")
   }
-  console.log(string)
   referenceString = string.split`,`.map((x) => +x);
 
   calculate();
@@ -86,15 +85,12 @@ function calculate() {
       ? sort(workingArray, "asc")
       : sort(workingArray, "desc");
     const clone = JSON.parse(JSON.stringify(workingArray));
-    console.log(clone)
     finalArray.push(clone);
   });
-  console.log(finalArray)
 }
 
 function sort(array, type) {
   if (type === "desc") {
-    console.log("desc");
     return array.sort((a, b) => {
       return b.count - a.count;
     });
@@ -160,6 +156,9 @@ const newElement = (name) => document.createElement(name)
 function showResults() {
   const table = document.getElementById("result");
   removeAllChildNodes(table);
+  checkXposition()
+
+
 
   const caption = newElement("caption");
   caption.innerHTML = titleCase(type);
@@ -211,6 +210,24 @@ function showResults() {
   calculateResults();
 }
 
+function checkXposition() {
+
+  if (type === 'mostRecentlyUsed' || type === 'leastFrequentlyUsed') {
+    frames = parseInt(frames)
+    for (i = 0; i < referenceString.length; i++) {
+      if (finalArray[i].length < frames) {
+        const len = finalArray[i].length
+        console.log(len)
+
+        for (j = 0; j < frames - len; j++) {
+          finalArray[i].unshift('X')
+        }
+      }
+
+    }
+  }
+}
+
 function removeAllChildNodes(parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
@@ -224,16 +241,9 @@ const calculateResults = () => {
   const parent = document.getElementById("calculations");
   removeAllChildNodes(parent);
   const times = countOccurrences(pageFault, "Y");
-  if (type === 'mostRecentlyUsed' || type === 'leastFrequentlyUsed') {
-    console.log('aayo')
-    const message = newElement("div");
-    message.style.color = 'blue'
-    message.style.margin = "10px";
-    message.innerHTML =
-      'Move X to low frames'
-    parent.appendChild(message)
-  }
+
   const myDiv = newElement("div");
+  myDiv.style.margin = "10px";
   myDiv.innerHTML =
     "Total number of page faults = " +
     times +

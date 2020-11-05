@@ -199,6 +199,8 @@ function showResults() {
 
         }
       }
+            console.log(toEnter)
+
       td.innerHTML = toEnter === undefined ? "X" : toEnter;
       td.setAttribute("class", "resultData");
       tr.appendChild(td);

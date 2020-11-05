@@ -13,9 +13,8 @@ function show() {
   frames = document.getElementById("numberOfFrames").value;
   var string = document.getElementById("inputString").value.trim();
   type = document.getElementById("type").value;
-  
-  while(string.includes(' '))
-  {
+
+  while (string.includes(' ')) {
     string = string.replace(" ", ",")
   }
   console.log(string)
@@ -74,8 +73,7 @@ function calculate() {
           });
         }
 
-        if(secondChanceAlgorithm)
-        {
+        if (secondChanceAlgorithm) {
           workingArray.forEach((e) => {
             if (e.name == element.name) {
               e.touched = true;
@@ -87,10 +85,10 @@ function calculate() {
     type === "leastFrequentlyUsed"
       ? sort(workingArray, "asc")
       : sort(workingArray, "desc");
-      const clone = JSON.parse(JSON.stringify(workingArray));
-console.log(clone)
-      finalArray.push(clone);
-    });
+    const clone = JSON.parse(JSON.stringify(workingArray));
+    console.log(clone)
+    finalArray.push(clone);
+  });
   console.log(finalArray)
 }
 
@@ -194,17 +192,15 @@ function showResults() {
       var toEnter = finalArray[j][i];
       if (typeof toEnter === "object") {
 
-        if(type ==='mostFrequentlyUsed' || type === 'leastFrequentlyUsed')
-        {
+        if (type === 'mostFrequentlyUsed' || type === 'leastFrequentlyUsed') {
           toEnter = `<span> ${toEnter.name} <sub> ${toEnter.count}</sub></span>`;
         }
-        else{
+        else {
           toEnter.touched && (td.style.color = 'red')
           toEnter = toEnter.name
 
         }
       }
-      console.log(toEnter)
       td.innerHTML = toEnter === undefined ? "X" : toEnter;
       td.setAttribute("class", "resultData");
       tr.appendChild(td);
@@ -228,16 +224,28 @@ const calculateResults = () => {
   const parent = document.getElementById("calculations");
   removeAllChildNodes(parent);
   const times = countOccurrences(pageFault, "Y");
-  console.log(times);
-  const myDiv = document.createElement("div");
+  if (type === 'mostRecentlyUsed' || type === 'leastFrequentlyUsed') {
+    console.log('aayo')
+    const message = newElement("div");
+    message.style.color = 'blue'
+    message.style.margin = "10px";
+    message.innerHTML =
+      'Move X to low frames'
+    parent.appendChild(message)
+  }
+  const myDiv = newElement("div");
   myDiv.innerHTML =
     "Total number of page faults = " +
     times +
     "<br/> Page Fault = " +
     (times * 100) / referenceString.length +
     "%";
-  myDiv.style.marginTop = "10px";
+
   parent.appendChild(myDiv);
+
+
+
+
 };
 
 const titleCase = (text) => {

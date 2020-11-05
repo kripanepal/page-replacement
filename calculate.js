@@ -11,11 +11,16 @@ function show() {
   workingArray = [];
   pageFault = [];
   frames = document.getElementById("numberOfFrames").value;
-  var string = document.getElementById("inputString").value;
+  var string = document.getElementById("inputString").value.trim();
   type = document.getElementById("type").value;
+  
+  while(string.includes(' '))
+  {
+    string = string.replace(" ", ",")
+  }
+  console.log(string)
   referenceString = string.split`,`.map((x) => +x);
-  var fn = window[type];
-  // if (typeof fn === "function") fn();
+
   calculate();
   showResults();
 }
@@ -194,11 +199,12 @@ function showResults() {
           toEnter = `<span> ${toEnter.name} <sub> ${toEnter.count}</sub></span>`;
         }
         else{
-          toEnter.touched&& (td.style.color = 'red')
+          toEnter.touched && (td.style.color = 'red')
           toEnter = toEnter.name
 
         }
       }
+      console.log(toEnter)
       td.innerHTML = toEnter === undefined ? "X" : toEnter;
       td.setAttribute("class", "resultData");
       tr.appendChild(td);

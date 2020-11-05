@@ -35,3 +35,10 @@ td{
 body{
     margin: 10px;
 }
+
+sub{
+    position: relative;
+    bottom: 0px;
+    right: 0px;
+    font-size: 10px;
+}

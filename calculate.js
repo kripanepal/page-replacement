@@ -4,6 +4,7 @@ var type = "";
 var frames;
 var referenceString = [];
 var pageFault = [];
+var toShift = ["mostRecentlyUsed", "leastFrequentlyUsed", "mostFrequentlyUsed"];
 
 function show() {
   finalArray = [];
@@ -13,164 +14,91 @@ function show() {
   var string = document.getElementById("inputString").value;
   type = document.getElementById("type").value;
   referenceString = string.split`,`.map((x) => +x);
-
-  console.log(frames, referenceString, type);
-  // function we want to run
-
-  // find object
   var fn = window[type];
-
-  // is object a function?
-  if (typeof fn === "function") fn();
-
+  // if (typeof fn === "function") fn();
+  calculate();
   showResults();
 }
 
-function leastRecentlyUsed() {
-  referenceString.forEach((element) => {
-    if (!workingArray.includes(element)) {
+
+function calculate() {
+  const frequentAlgorithm =
+    type === "mostFrequentlyUsed" || type === "leastFrequentlyUsed";
+  const secondChanceAlgorithm = type === "secondChance";
+  var toWork =
+    frequentAlgorithm || secondChanceAlgorithm
+      ? arrayToObject()
+      : referenceString;
+
+  toWork.forEach((element) => {
+    const checkExists =
+      frequentAlgorithm || secondChanceAlgorithm
+        ? exists(element)
+        : workingArray.includes(element);
+
+    if (!checkExists) {
       pageFault.push("Y");
 
       if (workingArray.length < frames) {
-        workingArray.push(element);
+        toShift.includes(type)
+          ? workingArray.unshift(element)
+          : workingArray.push(element);
       } else {
-        replace(element);
+        secondChanceAlgorithm ? secondChanceReplace(element) : replace(element);
       }
     } else {
       pageFault.push("N");
 
-      workingArray.push(
-        workingArray.splice(workingArray.indexOf(element), 1)[0]
-      );
-    }
-    finalArray.push([...workingArray]);
-  });
-  console.log(finalArray);
-}
-function mostRecentlyUsed() {
-  referenceString.forEach((element) => {
-    if (!workingArray.includes(element)) {
-      pageFault.push("Y");
-
-      if (workingArray.length < frames) {
-        workingArray.unshift(element);
+      if (toShift.includes(type) && !frequentAlgorithm && !secondChanceAlgorithm) {
+        workingArray.unshift(
+          workingArray.splice(workingArray.indexOf(element), 1)[0]
+        );
       } else {
-        replace(element);
-      }
-    } else {
-      pageFault.push("N");
-
-      workingArray.unshift(
-        workingArray.splice(workingArray.indexOf(element), 1)[0]
-      );
-    }
-    finalArray.push([...workingArray]);
-  });
-  console.log(finalArray);
-}
-function firstInFirstOut() {
-  referenceString.forEach((element) => {
-    if (!workingArray.includes(element)) {
-      pageFault.push("Y");
-
-      if (workingArray.length < frames) {
-        workingArray.push(element);
-      } else {
-        replace(element);
-      }
-    } else {
-      pageFault.push("N");
-    }
-    finalArray.push([...workingArray]);
-  });
-  console.log(finalArray);
-}
-
-function mostFrequentlyUsed() {
-  const temp = arrayToObject();
-  console.log(temp.slice());
-
-  temp.forEach((element) => {
-    if (!exists(element)) {
-      pageFault.push("Y");
-
-      if (workingArray.length < frames) {
-        workingArray.push(element);
-      } else {
-        element.count = 1;
-        replace(element);
-      }
-    } else {
-      pageFault.push("N");
-
-      workingArray.forEach((e) => {
-        if (e.name == element.name) {
-          e.count++;
+        if (type !== "firstInFirstOut" && !frequentAlgorithm && !secondChanceAlgorithm) {
+          console.log("here");
+          workingArray.push(
+            workingArray.splice(workingArray.indexOf(element), 1)[0]
+          );
         }
-      });
+
+        if (frequentAlgorithm) {
+          workingArray.forEach((e) => {
+            if (e.name == element.name) {
+              e.count++;
+            }
+          });
+        }
+
+        if(secondChanceAlgorithm)
+        {
+          workingArray.forEach((e) => {
+            if (e.name == element.name) {
+              e.touched = true;
+            }
+          });
+        }
+      }
     }
-    workingArray.sort((a, b) => {
+    type === "leastFrequentlyUsed"
+      ? sort(workingArray, "asc")
+      : sort(workingArray, "desc");
+      const clone = JSON.parse(JSON.stringify(workingArray));
+console.log(clone)
+      finalArray.push(clone);
+    });
+  console.log(finalArray)
+}
+
+function sort(array, type) {
+  if (type === "desc") {
+    console.log("desc");
+    return array.sort((a, b) => {
       return b.count - a.count;
     });
-    finalArray.push([...workingArray]);
+  }
+  return array.sort((a, b) => {
+    return a.count - b.count;
   });
-  console.log(finalArray);
-}
-
-function leastFrequentlyUsed() {
-  const temp = arrayToObject();
-  console.log(temp.slice());
-  temp.forEach((element) => {
-    if (!exists(element)) {
-      pageFault.push("Y");
-
-      if (workingArray.length < frames) {
-        workingArray.unshift(element);
-      } else {
-        element.count = 1;
-        replace(element);
-      }
-    } else {
-      pageFault.push("N");
-
-      workingArray.forEach((e) => {
-        if (e.name == element.name) {
-          e.count++;
-        }
-      });
-    }
-    workingArray.sort((a, b) => {
-      return a.count - b.count;
-    });
-    finalArray.push([...workingArray]);
-  });
-  console.log(finalArray);
-}
-
-function secondChance() {
-  const temp = arrayToObject();
-  temp.forEach((element) => {
-    if (!exists(element)) {
-      pageFault.push("Y");
-
-      if (workingArray.length < frames) {
-        workingArray.push(element);
-      } else {
-        secondChanceReplace(element);
-      }
-    } else {
-      pageFault.push("N");
-
-      workingArray.forEach((e) => {
-        if (e.name == element.name) {
-          e.touched = true;
-        }
-      });
-    }
-    console.log(workingArray);
-    finalArray.push([...workingArray]);
-  });
-  console.log(finalArray);
 }
 
 function exists(identity) {
@@ -205,6 +133,7 @@ function replace(element) {
     workingArray.push(element);
   }
 }
+
 function secondChanceReplace(element) {
   var done = false;
   while (!done) {
@@ -223,19 +152,21 @@ function secondChanceReplace(element) {
   }
 }
 
+const newElement = (name) => document.createElement(name)
+
 function showResults() {
   const table = document.getElementById("result");
   removeAllChildNodes(table);
 
-  const caption = document.createElement("caption");
+  const caption = newElement("caption");
   caption.innerHTML = titleCase(type);
   table.appendChild(caption);
-  const tr = document.createElement("tr");
-  const tr2 = document.createElement("tr");
+  const tr = newElement("tr");
+  const tr2 = newElement("tr");
   tr.setAttribute("class", "resultRow");
   for (j = 0; j < referenceString.length; j++) {
-    const th = document.createElement("th");
-    const td = document.createElement("td");
+    const th = newElement("th");
+    const td = newElement("td");
 
     th.innerHTML = referenceString[j];
     td.innerHTML = pageFault[j];
@@ -257,7 +188,12 @@ function showResults() {
 
       var toEnter = finalArray[j][i];
       if (typeof toEnter === "object") {
-        toEnter = toEnter.name;
+
+        if(type ==='mostFrequentlyUsed' || type === 'leastFrequentlyUsed')
+        {
+          toEnter = `<span> ${toEnter.name} <sub> ${toEnter.count}</sub></span>`;
+        }
+        toEnter.touched&& (td.style.color = 'red')
       }
       td.innerHTML = toEnter === undefined ? "X" : toEnter;
       td.setAttribute("class", "resultData");
